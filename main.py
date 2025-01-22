@@ -35,18 +35,7 @@
 # from jose import jwt
 # import requests
 
-# app = FastAPI()
-# # secert_id:711055c6-2722-4880-b136-7f3a00bc6589
-# # Secert_value: 87w8Q~_cI1ZEDdpbqd-KRjzkSnjUmNdSstqoNdrA
-# # Azure AD Configuration
-# CLIENT_ID = "b564554a-b011-4583-bdaa-3b70da304682"
-# CLIENT_SECRET = "87w8Q~_cI1ZEDdpbqd-KRjzkSnjUmNdSstqoNdrA"
-# TENANT_ID = "1452a59b-1e9c-4484-b770-fb10b4153b92"
-# REDIRECT_URI = "http://localhost:8000/auth/callback"
-# AUTHORIZATION_URL = f"https://login.microsoftonline.com/{TENANT_ID}/oauth2/v2.0/authorize"
-# TOKEN_URL = f"https://login.microsoftonline.com/{TENANT_ID}/oauth2/v2.0/token"
-# JWKS_URL = f"https://login.microsoftonline.com/{TENANT_ID}/discovery/v2.0/keys"
-# ALGORITHM = "RS256"
+#insert missing with MSAL lib usage
 
 # # Custom OAuth2 Scheme for Swagger
 # oauth2_flows = OAuthFlowsModel(
@@ -159,10 +148,7 @@
 
 # app = FastAPI()
 
-# CLIENT_ID = "b564554a-b011-4583-bdaa-3b70da304682"
-# CLIENT_SECRET = "87w8Q~_cI1ZEDdpbqd-KRjzkSnjUmNdSstqoNdrA"
-# TENANT_ID = "1452a59b-1e9c-4484-b770-fb10b4153b92"
-# REDIRECT_URI = "http://localhost:8000/auth/callback"
+# insert the missing variable here
 
 # authority = f"https://login.microsoftonline.com/{TENANT_ID}"
 # scopes = ["User.Read"]
@@ -214,10 +200,7 @@ from jose import jwt
 
 
 
-# CLIENT_ID = "b564554a-b011-4583-bdaa-3b70da304682"
-# CLIENT_SECRET = "87w8Q~_cI1ZEDdpbqd-KRjzkSnjUmNdSstqoNdrA"
-# TENANT_ID = "1452a59b-1e9c-4484-b770-fb10b4153b92"
-# REDIRECT_URI = "http://localhost:8000/auth/callback"
+# insert hte variable here
 
 token_auth_scheme = HTTPBearer()
 
