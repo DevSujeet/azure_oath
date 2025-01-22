@@ -4,6 +4,7 @@ from jose import jwt, JWTError
 from fastapi import Depends, HTTPException, Security
 import requests
 from config import CLIENT_ID, JWKS_URL, AUDIENCE, ISSUER, TENANT_ID
+from auth.azure_auth import msal_client, SCOPES
 
 async def fetch_public_keys():
     """Fetch public keys from Azure's JWKS endpoint."""
@@ -39,7 +40,7 @@ async def verify_access_token(token: str) -> dict:
     except JWTError as e:
         raise HTTPException(status_code=401, detail=f"Invalid or expired access token: {str(e)}")
 ##############################################
-
+token_auth_scheme = HTTPBearer()
 
 def get_public_keys():
     keys_url = f"https://login.microsoftonline.com/{TENANT_ID}/discovery/keys?appid={CLIENT_ID}"
@@ -54,7 +55,7 @@ def get_key_by_kid(kid, keys):
     raise ValueError("Key not found")
 
 
-token_auth_scheme = HTTPBearer()
+
 def validate_token(credentials: HTTPAuthorizationCredentials = Depends(token_auth_scheme)):
     try:
         token = credentials.credentials
@@ -83,8 +84,80 @@ def validate_token(credentials: HTTPAuthorizationCredentials = Depends(token_aut
         raise HTTPException(status_code=401, detail=f"Token validation failed: {str(e)}")
     except ValueError as e:
         raise HTTPException(status_code=401, detail=str(e))
-    
 
+# def get_public_keys():
+#     """Fetch Azure AD public keys."""
+#     keys_url = f"https://login.microsoftonline.com/{os.getenv('TENANT_ID')}/discovery/keys"
+#     response = requests.get(keys_url)
+#     response.raise_for_status()
+#     return response.json().get("keys", [])
+
+# def get_key_by_kid(kid, keys):
+#     """Find the matching key by its kid."""
+#     for key in keys:
+#         if key["kid"] == kid:
+#             return key
+#     raise ValueError("Public key not found")
+
+# def validate_token(credentials: HTTPAuthorizationCredentials = Depends(token_auth_scheme)):
+#     """Validate the access token using Azure AD public keys."""
+#     token = credentials.credentials
+#     try:
+#         # Decode the token header to get the key ID
+#         unverified_header = jwt.get_unverified_header(token)
+#         kid = unverified_header.get("kid")
+#         if not kid:
+#             raise HTTPException(status_code=401, detail="Invalid token header: 'kid' missing")
+
+#         # Retrieve and match the public key
+#         public_keys = get_public_keys()
+#         key = get_key_by_kid(kid, public_keys)
+
+#         # Construct the public key for JWT validation
+#         public_key = {
+#             "kty": key["kty"],
+#             "n": key["n"],
+#             "e": key["e"]
+#         }
+
+#         # Decode and validate the token
+#         decoded_token = jwt.decode(
+#             token,
+#             public_key,
+#             algorithms=key["alg"],
+#             audience=AUDIENCE,
+#             issuer=f"https://login.microsoftonline.com/{TENANT_ID}/v2.0"
+#         )
+#         return decoded_token
+#     except jwt.ExpiredSignatureError:
+#         raise HTTPException(status_code=401, detail="Token expired")
+#     except jwt.JWTError as e:
+#         raise HTTPException(status_code=401, detail=f"Token validation failed: {str(e)}")
+    
+########################USING MSAL######################
+def validate_access_token_msal(credentials: HTTPAuthorizationCredentials = Depends(token_auth_scheme)):
+    try:
+        token = credentials.credentials
+        # Validate the token with MSAL
+        result = msal_client.acquire_token_silent(
+            token=token,
+            scopes=SCOPES,
+            account=None
+        )
+
+        # If result is None or contains an error, validation failed
+        if not result or "error" in result:
+            raise HTTPException(
+                status_code=401,
+                detail=f"Token validation failed: {result.get('error_description', 'Unknown error')}"
+            )
+
+        # Return the claims if validation succeeds
+        return result.get("id_token_claims", {})
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=f"Token validation failed: {str(e)}")
+
+##############################################
 # def validate_token(credentials: HTTPAuthorizationCredentials = Depends(token_auth_scheme)):
 #     try:
 #         token = credentials.credentials
@@ -114,9 +187,9 @@ def check_roles(required_role: str):
         return decoded_token
     return role_checker
 
-security = HTTPBearer()
+# security = HTTPBearer()
 
-async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(security)):
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(token_auth_scheme)):
     """Dependency to verify the Access Token and extract user details."""
     token = credentials.credentials
     payload = await verify_access_token(token)
