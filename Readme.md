@@ -14,9 +14,10 @@ Step 1: Create an App Registration
 
 - Redirect URI:
 
-    - Select "Web".
+  - Select "Web".
 
-    - Provide the URI http://<backend_domain>/auth/redirect (replace <backend_domain> with the actual domain or localhost for testing).
+  - Provide the URI http://<backend_domain>/auth/callback (replace <backend_domain> with the actual domain or localhost for testing).
+  - for local testing : http://localhost:8000/auth/callback
 
 Step 2: Note Down Key Details
 
@@ -26,11 +27,11 @@ Step 2: Note Down Key Details
 
 - Client Secret:
 
-    - Go to Certificates & secrets > New client secret.
+  - Go to Certificates & secrets > New client secret.
 
-    - Add a description and set an expiration period.
+  - Add a description and set an expiration period.
 
-    - Copy and save the secret value (it will not be shown again).
+  - Copy and save the secret value (it will not be shown again).
 
 Step 3: Configure API Permissions
 
@@ -40,38 +41,41 @@ Step 3: Configure API Permissions
 
 - Add these permissions:
 
-    - openid
+  - openid
 
-    - profile
+  - profile
 
-    - email
+  - email
 
-    - User.Read
+  - User.Read
 
 - Click Grant admin consent to apply these permissions across the organization.
 
 Step 4: Verify Redirect URI
 
-- Confirm that the Redirect URI http://<backend_domain>/auth/redirect matches the backend configuration.- 
+- Confirm that the Redirect URI http://<backend_domain>/auth/redirect matches the backend configuration.-
 
+## Refresh
 
-## Refresh 
 How to Fix or Debug
 
 1. Verify Azure AD Configuration:
-    - Check the token lifetime policies in Azure AD:
-        - Navigate to Azure Active Directory > Conditional Access > Token Lifetime Policies.
-        - Confirm if a policy explicitly limits the refresh token's lifetime.
+
+   - Check the token lifetime policies in Azure AD:
+     - Navigate to Azure Active Directory > Conditional Access > Token Lifetime Policies.
+     - Confirm if a policy explicitly limits the refresh token's lifetime.
 
 2. Inspect Application Type:
-    - Ensure your application supports the "offline_access" scope and the refresh token feature:
-        -  Go to Azure AD > App Registrations > Your App > API Permissions.
-        - Ensure offline_access is granted and consented.
+
+   - Ensure your application supports the "offline_access" scope and the refresh token feature:
+     - Go to Azure AD > App Registrations > Your App > API Permissions.
+     - Ensure offline_access is granted and consented.
 
 3. Test With an Enterprise Account:
-    - If you are using a personal account, the behavior might differ.
-    - Test with an enterprise Azure AD account to verify if the refresh_token_expires_in behaves as expected.
+
+   - If you are using a personal account, the behavior might differ.
+   - Test with an enterprise Azure AD account to verify if the refresh_token_expires_in behaves as expected.
 
 4. Use a Long-Lived Refresh Token:
-    - Request longer-lived tokens using Continuous Access Evaluation (CAE) and policies:
-        - Ensure your app supports Conditional Access policies that extend refresh token lifetimes.
+   - Request longer-lived tokens using Continuous Access Evaluation (CAE) and policies:
+     - Ensure your app supports Conditional Access policies that extend refresh token lifetimes.
