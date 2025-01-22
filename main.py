@@ -200,7 +200,10 @@ from jose import jwt
 
 
 
-# insert hte variable here
+CLIENT_ID = "b564554a-b011-4583-bdaa-3b70da304682"
+CLIENT_SECRET = "87w8Q~_cI1ZEDdpbqd-KRjzkSnjUmNdSstqoNdrA"
+TENANT_ID = "1452a59b-1e9c-4484-b770-fb10b4153b92"
+REDIRECT_URI = "http://localhost:8000/auth/callback”
 
 token_auth_scheme = HTTPBearer()
 
