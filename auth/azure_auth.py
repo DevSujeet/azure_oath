@@ -46,6 +46,7 @@ def exchange_code_for_token(auth_code: str) -> dict:
 
     access_token = token_response.get("access_token")
     refresh_token = token_response.get("refresh_token")
+    id_token = token_response.get("id_token")
     expires_in = token_response.get("expires_in")
     refresh_token_expires_in = token_response.get("ext_expires_in")  # Added field for refresh token expiration
     user_info = token_response.get("id_token_claims", {})
@@ -56,6 +57,7 @@ def exchange_code_for_token(auth_code: str) -> dict:
         "roles": user_info.get("roles", []),
         "access_token": access_token,
         "refresh_token": refresh_token,
+        "id_token": id_token,
         "expires_in": expires_in,
         "refresh_token_expires_in": refresh_token_expires_in
     }

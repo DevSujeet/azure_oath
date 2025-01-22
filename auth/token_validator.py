@@ -62,7 +62,7 @@ def validate_token(credentials: HTTPAuthorizationCredentials = Depends(token_aut
         unverified_header = jwt.get_unverified_header(token)
         kid = unverified_header.get("kid")
         if not kid:
-            raise HTTPException(status_code=401, detail="Invalid token header")
+            raise HTTPException(status_code=401, detail="Invalid token header, kid missing")
 
         # Retrieve public keys
         keys = get_public_keys()
@@ -194,3 +194,18 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(
     token = credentials.credentials
     payload = await verify_access_token(token)
     return payload
+
+def decode_id_token(id_token: str) -> dict:
+    """
+    Decode the ID token to extract claims.
+    """
+    try:
+        # Decode the ID token without signature verification
+        claims = jwt.decode(id_token, key="", options={"verify_signature": False})
+        return {
+            "username": claims.get("name"),
+            "email": claims.get("preferred_username"),
+            "roles": claims.get("roles", [])
+        }
+    except jwt.JWTError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid ID token: {str(e)}")

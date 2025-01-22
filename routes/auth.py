@@ -1,8 +1,9 @@
 
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, Header
 from fastapi.responses import RedirectResponse
 from auth.azure_auth import msal_client, exchange_code_for_token, get_access_token_using_refresh_token
+from auth.token_validator import decode_id_token
 from config import REDIRECT_URI
 
 router = APIRouter(
@@ -34,3 +35,18 @@ async def auth_redirect(code: str):
 async def refresh_token_endpoint(refresh_token: str):
     result = get_access_token_using_refresh_token(refresh_token)
     return result
+
+@router.get("/auth/userinfo", tags=["Authentication"])
+async def user_info(id_token: str = Header(...)):
+    """
+    Retrieve user information from the ID token.
+    """
+    user_data = decode_id_token(id_token)
+    if not user_data:
+        raise HTTPException(status_code=400, detail="Invalid or missing ID token")
+    
+    return {
+        "username": user_data["username"],
+        "email": user_data["email"],
+        "roles": user_data["roles"]
+    }
