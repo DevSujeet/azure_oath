@@ -37,7 +37,7 @@ def exchange_code_for_token(auth_code: str) -> dict:
     '''
     token_response = msal_client.acquire_token_by_authorization_code(
         auth_code,
-        scopes=["User.Read"],
+        scopes=[SCOPES],#["User.Read"],
         redirect_uri=REDIRECT_URI
     )
 
@@ -67,7 +67,7 @@ def exchange_code_for_token(auth_code: str) -> dict:
 def get_access_token_using_refresh_token(refresh_token: str):
     token_response = msal_client.acquire_token_by_refresh_token(
         refresh_token=refresh_token,
-        scopes=["User.Read"]
+        scopes=[SCOPES],#["User.Read"]
     )
 
     if "error" in token_response:

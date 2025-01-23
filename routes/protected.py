@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Security, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from auth.token_validator import get_current_user, validate_access_token_msal, validate_token, verify_access_token
+from auth.token_validator import get_current_user, validate_token
 
 router = APIRouter(
     prefix="/protected",
@@ -47,12 +47,6 @@ This leads to duplicate execution of validate_token. While it won't cause errors
         raise HTTPException(status_code=403, detail="Insufficient role permissions")
     return {"message": "Welcome, Admin"}
 
-@router.get("/token_validation_msal") #, dependencies=[Depends(validate_token)]
-async def admin_resource(decoded_token: dict = Depends(validate_access_token_msal)):
-    '''
-    validating_token using MSAL
-    '''
-    roles = decoded_token.get("roles", [])
-    if "Admin" not in roles:
-        raise HTTPException(status_code=403, detail="Insufficient role permissions")
-    return {"message": "Welcome, Admin"}
+
+
+

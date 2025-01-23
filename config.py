@@ -31,10 +31,12 @@ CLIENT_ID = settings.client_id
 CLIENT_SECRET = settings.client_secret
 REDIRECT_URI = settings.redirect_uri
 AUTHORITY = f"https://login.microsoftonline.com/{TENANT_ID}"
-SCOPES = ["User.Read", "openid", "profile", "email"]
+SCOPES = f"api://{CLIENT_ID}/access_as_user" #["User.Read", "openid", "profile", "email"]
 
 # JWT Validation
 JWKS_URL = f"{AUTHORITY}/discovery/v2.0/keys"
-AUDIENCE = CLIENT_ID
+AUDIENCE = CLIENT_ID #f"api://{CLIENT_ID}"
 ISSUER = f"https://login.microsoftonline.com/{TENANT_ID}/v2.0"
+
+# https://login.microsoftonline.com/<tenant-id>/discovery/v2.0/keys
 

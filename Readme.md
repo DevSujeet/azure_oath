@@ -10,7 +10,7 @@ Step 1: Create an App Registration
 
 - Name: Enter a recognizable name for the app (e.g., FastAPIApp).
 
-- Supported account types: Choose "Accounts in this organizational directory only" or another option as applicable.
+- Supported account types: Choose "Accounts in this organizational directory only" or another option as applicable.(Single Tenet)
 
 - Redirect URI:
 
