@@ -1,3 +1,10 @@
+## motivation
+
+To understand the SSO process on Azure.
+
+- The App is able to fetch tokens from the Azure when user enters thier cred on MS login.
+- App has the ability to validate and decode token using proper keys using JWKS.
+
 ## Azure Portal Configuration
 
 Step 1: Create an App Registration
