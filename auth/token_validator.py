@@ -7,7 +7,7 @@ from jwt import PyJWKClient
 import requests
 from auth.token_validator_jwt import inspect_token
 from config import CLIENT_ID, JWKS_URL, AUDIENCE, ISSUER, TENANT_ID
-from auth.azure_auth import msal_client, SCOPES
+from auth.azure_auth import fetch_user_detail_from_MS, msal_client, SCOPES
 
 async def fetch_public_keys():
     """Fetch public keys from Azure's JWKS endpoint."""
@@ -111,7 +111,9 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(
     """Dependency to verify the Access Token and extract user details."""
     token = credentials.credentials
     payload = await verify_access_token(token) #decode(token) #
-    return payload
+    user_details = await fetch_user_detail_from_MS(access_token=token)
+    return {"payload":payload,
+            "user_details":user_details}
 
 
 async def decode(token: str):
@@ -128,4 +130,4 @@ async def decode(token: str):
         options={"verify_exp": False},)
     return data
 
-    
+

@@ -1,7 +1,8 @@
 from fastapi.responses import JSONResponse
 from msal import ConfidentialClientApplication
 from fastapi import HTTPException
-from config import CLIENT_ID, CLIENT_SECRET, AUTHORITY, SCOPES, REDIRECT_URI
+import requests
+from config import CLIENT_ID, CLIENT_SECRET, AUTHORITY, MS_USER_URL, SCOPES, REDIRECT_URI
 
 # Initialize MSAL Confidential Client Application
 # msal_client = ConfidentialClientApplication(
@@ -83,3 +84,17 @@ def get_access_token_using_refresh_token(refresh_token: str):
         "expires_in": new_expires_in,
         "refresh_token_expires_in": refresh_token_expires_in
     }
+
+async def fetch_user_detail_from_MS(access_token:str):
+    try:
+        headers = {
+            "Authorization":f"Bearer {access_token}",
+            "Content_type":"application/json"
+        }
+        response = requests.get(MS_USER_URL, headers=headers)
+        if response.status_code == 200:
+            user_data = response.json()
+            return user_data
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Unable to fetch user details")
+

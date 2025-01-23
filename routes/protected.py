@@ -12,6 +12,7 @@ router = APIRouter(
 @router.get("/get_current_user")
 async def protected_route(user: dict = Depends(get_current_user)):
     """A basic protected route."""
+    
     return {"message": "Access granted", "user": user}
 
 @router.get("/check_admin_role")

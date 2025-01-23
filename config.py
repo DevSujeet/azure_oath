@@ -37,5 +37,6 @@ SCOPES = f"api://{CLIENT_ID}/access_as_user" #["User.Read", "openid", "profile",
 JWKS_URL = f"{AUTHORITY}/discovery/v2.0/keys"
 AUDIENCE = CLIENT_ID #f"api://{CLIENT_ID}"
 ISSUER = f"https://login.microsoftonline.com/{TENANT_ID}/v2.0"
+MS_USER_URL = "https://graph.microsoft.com/.default" #"https://graph.microsoft.com/v1.0/me"
 
 
