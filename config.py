@@ -38,5 +38,4 @@ JWKS_URL = f"{AUTHORITY}/discovery/v2.0/keys"
 AUDIENCE = CLIENT_ID #f"api://{CLIENT_ID}"
 ISSUER = f"https://login.microsoftonline.com/{TENANT_ID}/v2.0"
 
-# https://login.microsoftonline.com/<tenant-id>/discovery/v2.0/keys
 

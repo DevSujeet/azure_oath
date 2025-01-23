@@ -18,7 +18,7 @@ async def fetch_public_keys():
         return response.json()["keys"]
 
 async def verify_access_token(token: str) -> dict:
-    """Verify the Access Token using Azure's JWKS."""
+    """works Verify the Access Token using Azure's JWKS."""
     try:
         # Decode the token header to get the key ID
         unverified_header = jwt.get_unverified_header(token)
@@ -129,63 +129,3 @@ async def decode(token: str):
     return data
 
     
-############################
-
-# def get_user_info_no_validation(x_access_token: str = Header(...), x_id_token: str = Header(...)):
-#     """Dependency to extract and validate tokens from headers."""
-#     access_token = x_access_token#authorization.split(" ")[1]  # Extract Bearer token
-#     token_info = {
-#         "access_token": access_token,
-#         "id_token": x_id_token
-#     }
-
-#     payload = _get_user_info(token_info)
-#     return payload
-
-# def _get_user_info(tokens: Dict):
-#     """Verify the JWT token and return the payload."""
-#     credentials_exception = HTTPException(
-#         status_code=401,
-#         detail="Could not validate credentials",
-#         headers={"WWW-Authenticate": "Bearer"},
-#     )
-
-#     expired_token_exception = HTTPException(
-#         status_code=401,
-#         detail="Token has expired",
-#         headers={"WWW-Authenticate": "Bearer"},
-#     )
-#     try:
-#         id_token = tokens.get("id_token")
-#         access_token = tokens.get("access_token")
-
-#         # Decode ID Token without validation
-#         id_token_decoded = jwt.decode(id_token, "", options={"verify_signature": False})
-
-#         # Decode Access Token without validation
-#         access_token_decoded = jwt.decode(access_token, "", options={"verify_signature": False})
-
-#         return {
-#             "username": id_token_decoded.get("name"),
-#             "email": id_token_decoded.get("preferred_username"),
-#             "roles": id_token_decoded.get("roles", []),
-#             "access_token_claims": access_token_decoded  # Contains access token claims
-#         }
-#     except jwt.ExpiredSignatureError:
-#         # Handle expired token: Decode without verifying expiration to log user details
-#         try:
-#             payload = jwt.decode(access_token, "", options={"verify_signature": False,"verify_exp": False})
-#             username = payload.get("username")
-#             email = payload.get("email")
-#             roles = payload.get("roles")
-#             # Log details about the expired token
-#             if username and email:
-#                 print(f"Expired token for user: {username} ({email}), roles: {roles}")
-#         except JWTError:
-#             raise credentials_exception  # Raise if decoding fails entirely
-#         # Token is expired but decoded successfully
-#         raise expired_token_exception
-    
-#     except JWTError:
-#         # Generic error for any other JWT issues
-#         raise credentials_exception
