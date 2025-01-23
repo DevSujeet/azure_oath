@@ -3,7 +3,7 @@
 To understand the SSO process on Azure.
 
 - The App is able to fetch tokens from the Azure when user enters thier cred on MS login.
-- App has the ability to validate and decode token using proper keys using JWKS.
+- App has the ability to validate and decode token using proper keys using JWKS.(ref: https://robertoprevato.github.io/Validating-JWT-Bearer-tokens-from-Azure-AD-in-Python/)
 
 ## Azure Portal Configuration
 
@@ -61,6 +61,27 @@ Step 3: Configure API Permissions
 Step 4: Verify Redirect URI
 
 - Confirm that the Redirect URI http://<backend_domain>/auth/redirect matches the backend configuration.-
+
+## CLAIMS - USER INFO IN ACCESS TOKEN
+
+Ensure Claims Are Present in the Access Token
+
+Azure AD access tokens can include claims such as name, email, and roles if configured correctly.
+Steps to Include Claims in Access Token:
+
+    Go to Azure Active Directory > App registrations > Your App.
+    Navigate to Token Configuration:
+        Click on Add optional claim.
+        Choose Access token.
+        Select claims like:
+            email (User's email).
+            given_name (User's first name).
+            family_name (User's last name).
+            roles (User's roles, if defined).
+        Save changes.
+    If required, grant admin consent for the changes:
+        Go to API Permissions.
+        Click Grant admin consent.
 
 ## Refresh
 

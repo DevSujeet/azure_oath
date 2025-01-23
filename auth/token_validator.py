@@ -110,10 +110,18 @@ def check_roles(required_role: str):
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(token_auth_scheme)):
     """Dependency to verify the Access Token and extract user details."""
     token = credentials.credentials
-    payload = await verify_access_token(token) #decode(token) #
-    user_details = await fetch_user_detail_from_MS(access_token=token)
-    return {"payload":payload,
-            "user_details":user_details}
+    decoded_token = await verify_access_token(token) #decode(token) #
+
+    # Extract details
+    user_info_from_token = {
+        "name": decoded_token.get("name"),
+        "email": decoded_token.get("preferred_username"),  # Azure AD uses `preferred_username` for email
+        "roles": decoded_token.get("roles", []),  # Roles might be a list
+    }
+    
+    user_details_graph = await fetch_user_detail_from_MS(access_token=token)
+    return {"user_info_from_token":user_info_from_token,
+            "user_info_graph":user_details_graph}
 
 
 async def decode(token: str):
