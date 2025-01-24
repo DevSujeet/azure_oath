@@ -20,7 +20,7 @@ async def protected_route(user: dict = Depends(get_current_user)):
 async def admin_route(user: dict = Depends(get_current_user)):
     """Route accessible only by users with the 'Admin' role."""
     roles = user.get("roles", [])
-    if "Admin" not in roles:
+    if "admin" not in roles:
         raise HTTPException(status_code=403, detail="Permission denied")
     return {"message": "Welcome Admin", "user": user}
 
@@ -33,7 +33,7 @@ async def protected_resource():
     '''
     return {"message": "This is a protected resource"}
 
-@router.get("/admin_validation") #, dependencies=[Depends(validate_token)]
+@router.get("/check_admin_role_2") #, dependencies=[Depends(validate_token)]
 async def admin_resource(decoded_token: dict = Depends(validate_token)):
     '''
     dependencies=[Depends(validate_token)]: This ensures validate_token is executed before the route handler (admin_resource) is called.
@@ -45,7 +45,7 @@ This leads to duplicate execution of validate_token. While it won't cause errors
     - validate_token is called as a dependency
     '''
     roles = decoded_token.get("roles", [])
-    if "Admin" not in roles:
+    if "admin" not in roles:
         raise HTTPException(status_code=403, detail="Insufficient role permissions")
     return {"message": "Welcome, Admin"}
 
