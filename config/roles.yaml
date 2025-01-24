@@ -1,0 +1,15 @@
+roles:
+  admin:
+    permissions:
+      - "create_item"
+      - "read_item"
+      - "update_item"
+      - "delete_item"
+  developer:
+    permissions:
+      - "create_item"
+      - "read_item"
+      - "update_item"
+  tester:
+    permissions:
+      - "read_item"

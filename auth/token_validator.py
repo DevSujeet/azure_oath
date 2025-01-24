@@ -6,7 +6,7 @@ from fastapi import Depends, HTTPException, Header, Security
 from jwt import PyJWKClient
 import requests
 from auth.token_validator_jwt import inspect_token
-from config import CLIENT_ID, JWKS_URL, AUDIENCE, ISSUER, TENANT_ID
+from config.config import CLIENT_ID, JWKS_URL, AUDIENCE, ISSUER, TENANT_ID
 from auth.azure_auth import fetch_user_detail_from_MS, msal_client, SCOPES
 
 async def fetch_public_keys():
@@ -119,9 +119,10 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(
         "roles": decoded_token.get("roles", []),  # Roles might be a list
     }
     
-    user_details_graph = await fetch_user_detail_from_MS(access_token=token)
-    return {"user_info_from_token":user_info_from_token,
-            "user_info_graph":user_details_graph}
+    return user_info_from_token
+    # user_details_graph = await fetch_user_detail_from_MS(access_token=token)
+    # return {"user_info_from_token":user_info_from_token,
+    #         "user_info_graph":user_details_graph}
 
 
 async def decode(token: str):

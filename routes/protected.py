@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Security, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from auth.token_validator import get_current_user, validate_token
+from role_dependency import role_based_authorization_with_optional_permissions_oauth
 
 router = APIRouter(
     prefix="/protected",
@@ -48,6 +49,11 @@ This leads to duplicate execution of validate_token. While it won't cause errors
         raise HTTPException(status_code=403, detail="Insufficient role permissions")
     return {"message": "Welcome, Admin"}
 
+
+@router.get("/require_permission_test")
+async def permission_route(user: dict = Depends(role_based_authorization_with_optional_permissions_oauth(["read_item"]))):
+    """Example of an editor-only route."""
+    return {"message": "Welcome Editor", "user": user}
 
 
 

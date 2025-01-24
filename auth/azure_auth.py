@@ -2,7 +2,7 @@ from fastapi.responses import JSONResponse
 from msal import ConfidentialClientApplication
 from fastapi import HTTPException
 import requests
-from config import CLIENT_ID, CLIENT_SECRET, AUTHORITY, MS_USER_URL, SCOPES, REDIRECT_URI
+from config.config import CLIENT_ID, CLIENT_SECRET, AUTHORITY, MS_USER_URL, SCOPES, REDIRECT_URI
 
 # Initialize MSAL Confidential Client Application
 # msal_client = ConfidentialClientApplication(
