@@ -57,7 +57,8 @@ class TokenManager:
             try:
                 response = requests.post(
                     self.auth_url,
-                    data={"client_id": self.client_id, "client_secret": self.client_secret},
+                    data={"client_id": self.client_id,
+                        "client_secret": self.client_secret},
                 )
                 response.raise_for_status()
                 token_data = response.json()
@@ -72,20 +73,9 @@ class TokenManager:
             self.fetch_token()
         return self.token
 
-# Decorator for retry logic
-def retry_on_token_expiry(max_retries):
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            retries = 0
-            while retries <= max_retries:
-                try:
-                    return func(*args, **kwargs)
-                except HTTPException as e:
-                    if "401" in str(e.detail) and retries < max_retries:
-                        # Refresh the token and retry
-                        token_manager.fetch_token()
-                        retries += 1
-                    else:
-                        raise e
-        return wrapper
-    return decorator
+
+token_manager = TokenManager(
+    auth_url="https://api.example.com/auth",
+    client_id="your_client_id",
+    client_secret="your_client_secret",
+)

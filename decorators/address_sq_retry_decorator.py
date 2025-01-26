@@ -1,6 +1,6 @@
 
 from fastapi import HTTPException
-from api_caller.address_sq_token_manager import token_manager
+from api_caller.address_sq.address_sq_token_manager import token_manager
 
 # Decorator for retry logic
 def retry_on_token_expiry(max_retries):
