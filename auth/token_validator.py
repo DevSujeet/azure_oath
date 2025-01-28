@@ -9,6 +9,7 @@ from auth.token_validator_jwt import inspect_token
 from config.config import CLIENT_ID, JWKS_URL, AUDIENCE, ISSUER, TENANT_ID
 from auth.azure_auth import fetch_user_detail_from_MS, msal_client, SCOPES
 
+############################ Method 1 to validate and decode token ############################################
 async def fetch_public_keys():
     """Fetch public keys from Azure's JWKS endpoint."""
     async with httpx.AsyncClient() as client:
@@ -46,8 +47,7 @@ async def verify_access_token(token: str) -> dict:
         raise HTTPException(status_code=401, detail=f"Token validation failed: {str(e)}")
     except ValueError as e:
         raise HTTPException(status_code=401, detail=str(e))
-##############################################
-token_auth_scheme = HTTPBearer()
+############################ Method 2 to validate and decode token ############################################
 
 def get_public_keys():
     keys_url = f"https://login.microsoftonline.com/{TENANT_ID}/discovery/keys?appid={CLIENT_ID}"
@@ -61,14 +61,11 @@ def get_key_by_kid(kid, keys):
             return key
     raise ValueError("Key not found")
 
-
-
-def validate_token(credentials: HTTPAuthorizationCredentials = Depends(token_auth_scheme)):
+async def validate_token(token:str):
     """
     wroked
     """
     try:
-        token = credentials.credentials
         unverified_header = jwt.get_unverified_header(token)
         kid = unverified_header.get("kid")
         if not kid:
@@ -95,36 +92,7 @@ def validate_token(credentials: HTTPAuthorizationCredentials = Depends(token_aut
     except ValueError as e:
         raise HTTPException(status_code=401, detail=str(e))
 
-
-#utitlit function to check if the user has the required role
-def check_roles(required_role: str):
-    def role_checker(decoded_token: dict = Depends(validate_token)):
-        roles = decoded_token.get("roles", [])
-        if required_role not in roles:
-            raise HTTPException(status_code=403, detail="Insufficient role permissions")
-        return decoded_token
-    return role_checker
-
-# security = HTTPBearer()
-
-async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(token_auth_scheme)):
-    """Dependency to verify the Access Token and extract user details."""
-    token = credentials.credentials
-    decoded_token = await verify_access_token(token) #decode(token) #
-
-    # Extract details
-    user_info_from_token = {
-        "name": decoded_token.get("name"),
-        "email": decoded_token.get("preferred_username"),  # Azure AD uses `preferred_username` for email
-        "roles": decoded_token.get("roles", []),  # Roles might be a list
-    }
-    
-    return user_info_from_token
-    # user_details_graph = await fetch_user_detail_from_MS(access_token=token)
-    # return {"user_info_from_token":user_info_from_token,
-    #         "user_info_graph":user_details_graph}
-
-
+############################ Method 3 to validate and decode token ############################################
 async def decode(token: str):
     '''
         works
@@ -140,3 +108,27 @@ async def decode(token: str):
     return data
 
 
+token_auth_scheme = HTTPBearer()
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(token_auth_scheme)):
+    """Dependency to verify the Access Token and extract user details."""
+    token = credentials.credentials
+    decoded_token = await validate_token(token=token)#verify_access_token(token) #decode(token) #
+
+    # Extract details
+    user_info_from_token = {
+        "name": decoded_token.get("name"),
+        "email": decoded_token.get("preferred_username"),  # Azure AD uses `preferred_username` for email
+        "roles": decoded_token.get("roles", []),  # Roles might be a list
+    }
+    
+    return user_info_from_token
+
+
+#utitlit function to check if the user has the required role
+def check_roles(required_role: str):
+    def role_checker(decoded_token: dict = Depends(validate_token)):
+        roles = decoded_token.get("roles", [])
+        if required_role not in roles:
+            raise HTTPException(status_code=403, detail="Insufficient role permissions")
+        return decoded_token
+    return role_checker
