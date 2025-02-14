@@ -1,3 +1,16 @@
+## Project setup
+   using Uv as python package manager.
+   $ uv venv
+   $ source .venv/bin/activate
+   $ uv pip install -r requirement.text 
+
+## Create a .env file to store the environment variables:
+
+   CLIENT_ID=client_id
+   CLIENT_SECRET=client_secert
+   TENANT_ID=tenet_id
+   REDIRECT_URI=callback_url
+
 ## motivation
 
 To understand the SSO process on Azure.
