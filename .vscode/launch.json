@@ -10,7 +10,7 @@
       "type": "debugpy",
       "request": "launch",
       "module": "uvicorn",
-      "args": ["main:app", "--reload"],
+      "args": ["src.main:app", "--reload"],
       "jinja": true
     }
   ]

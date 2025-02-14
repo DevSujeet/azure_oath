@@ -2,8 +2,8 @@
 
 from fastapi import APIRouter, Depends, HTTPException, Header
 from fastapi.responses import RedirectResponse
-from auth.azure_auth import msal_client, exchange_code_for_token, get_access_token_using_refresh_token
-from config.config import REDIRECT_URI
+from src.auth.azure_auth import msal_client, exchange_code_for_token, get_access_token_using_refresh_token
+from src.config.config import REDIRECT_URI
 
 router = APIRouter(
     prefix="/auth",

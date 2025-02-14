@@ -2,9 +2,9 @@
 from fastapi import HTTPException
 import requests
 from decorators.address_sq_retry_decorator import retry_on_token_expiry
-from api_caller.address_sq.address_sq_token_manager import token_manager
+from src.api_caller.address_sq.address_sq_token_manager import token_manager
 from typing import Protocol
-from utils.json_file_reader import read_json_raw
+from src.utils.json_file_reader import read_json_raw
 
 class response_provider(Protocol):
     async def search_by_text(self, text:str):

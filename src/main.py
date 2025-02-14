@@ -2,7 +2,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 import uvicorn
-from routes import auth, protected
+from src.routes import auth, protected
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

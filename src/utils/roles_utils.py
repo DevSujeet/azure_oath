@@ -8,7 +8,7 @@ def load_roles_config(filepath: str) -> Dict[str, List[str]]:
     return config.get("roles", {})
 
 
-ROLES_CONFIG = load_roles_config("config/roles.yaml")
+ROLES_CONFIG = load_roles_config("src/config/roles.yaml")
 
 # # Example: Accessing permissions for admin
 # admin_permissions = ROLES_CONFIG["admin"]["permissions"]

@@ -2,8 +2,8 @@ from ast import Dict, List
 from typing import List, Dict
 from fastapi import Depends, HTTPException, Request
 # from src.auth_saml.auth import get_current_user
-from auth.token_validator import get_current_user
-from utils.roles_utils import ROLES_CONFIG
+from src.auth.token_validator import get_current_user
+from src.utils.roles_utils import ROLES_CONFIG
 
 def check_permission(role: str, permission: str):
     """Check if a role has the required permission."""

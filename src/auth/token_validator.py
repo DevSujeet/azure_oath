@@ -5,9 +5,9 @@ from jose import jwt, JWTError
 from fastapi import Depends, HTTPException, Header, Security
 from jwt import PyJWKClient
 import requests
-from auth.token_validator_jwt import inspect_token
-from config.config import CLIENT_ID, JWKS_URL, AUDIENCE, ISSUER, TENANT_ID
-from auth.azure_auth import fetch_user_detail_from_MS, msal_client, SCOPES
+from src.auth.token_validator_jwt import inspect_token
+from src.config.config import CLIENT_ID, JWKS_URL, AUDIENCE, ISSUER, TENANT_ID
+from src.auth.azure_auth import fetch_user_detail_from_MS, msal_client, SCOPES
 
 ############################ Method 1 to validate and decode token ############################################
 async def fetch_public_keys():

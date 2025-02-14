@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Security, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from auth.token_validator import get_current_user, validate_token
-from role_dependency import role_based_authorization_with_optional_permissions_oauth
+from src.auth.token_validator import get_current_user, validate_token
+from src.role_dependency import role_based_authorization_with_optional_permissions_oauth
 
 router = APIRouter(
     prefix="/protected",
