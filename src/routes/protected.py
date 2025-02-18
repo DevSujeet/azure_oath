@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, Security, HTTPException
+from fastapi import APIRouter, Depends, Security, HTTPException, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from src.auth.token_validator import get_current_user, validate_token
+from src.decorators.log_decorator import log_request_response
 from src.role_dependency import role_based_authorization_with_optional_permissions_oauth
 
 router = APIRouter(
@@ -11,12 +12,14 @@ router = APIRouter(
 
 
 @router.get("/get_current_user")
-async def protected_route(user: dict = Depends(get_current_user)):
+@log_request_response(log_route=True)
+async def protected_route(request: Request, user: dict = Depends(get_current_user)):
     """A basic protected route."""
     
     return {"message": "Access granted", "user": user}
 
 @router.get("/check_admin_role")
+@log_request_response(log_route=True)
 async def admin_route(user: dict = Depends(get_current_user)):
     """Route accessible only by users with the 'Admin' role."""
     roles = user.get("roles", [])
@@ -51,6 +54,7 @@ This leads to duplicate execution of validate_token. While it won't cause errors
 
 
 @router.get("/require_permission_test")
+@log_request_response(log_route=True)
 async def permission_route(user: dict = Depends(role_based_authorization_with_optional_permissions_oauth(["read_item"]))):
     """Example of an editor-only route."""
     return {"message": "Welcome Editor", "user": user}

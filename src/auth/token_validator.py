@@ -2,7 +2,7 @@ from typing import Dict
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 import httpx
 from jose import jwt, JWTError
-from fastapi import Depends, HTTPException, Header, Security
+from fastapi import Depends, HTTPException, Header, Request, Security
 from jwt import PyJWKClient
 import requests
 from src.auth.token_validator_jwt import inspect_token
@@ -122,6 +122,32 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(
     }
     
     return user_info_from_token
+
+async def getUserInfo_from_request(request: Request):
+    """Extract user details from request using Authorization header."""
+    auth_header = request.headers.get("Authorization")
+    if auth_header:
+        try:
+            credentials = await token_auth_scheme(request)  #Await the token extraction
+            auth_token = credentials.credentials
+            decoded_token = await validate_token(auth_token)  #Validate and decode the token
+            
+            # ✅ Extract user details
+            user_info_from_token = {
+                "name": decoded_token.get("name"),
+                "email": decoded_token.get("preferred_username"),  # Azure AD uses `preferred_username` for email
+                "roles": decoded_token.get("roles", []),  # Roles might be a list
+            }
+            return user_info_from_token
+        except HTTPException:
+            pass  # Fall through to return unauthorized user info
+
+    # ✅ Return unauthorized user info if token is missing or invalid
+    return {
+        "name": "unauthorized",
+        "email": "unauthorized",
+        "roles": [],
+    }
 
 
 #utitlit function to check if the user has the required role
