@@ -18,6 +18,21 @@ To understand the SSO process on Azure.
 - The App is able to fetch tokens from the Azure when user enters thier cred on MS login.
 - App has the ability to validate and decode token using proper keys using JWKS.(ref: https://robertoprevato.github.io/Validating-JWT-Bearer-tokens-from-Azure-AD-in-Python/)
 
+## Logger Decorator
+
+   Sample usage: of log decorator : @log_request_response(log_route=True)
+
+   `**Note:- always pass the "request: Request" as parameter to capture request/User info in logger.`
+   
+   ```python
+   @router.get("/get_current_user")
+            @log_request_response(log_route=True)
+            async def protected_route(request: Request, user: dict = Depends(get_current_user)):
+               """A basic protected route."""
+               
+               return {"message": "Access granted", "user": user}
+   ```
+
 ## Azure Portal Configuration for local development
 
 Step 1: Create an App Registration
