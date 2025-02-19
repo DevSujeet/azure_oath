@@ -101,7 +101,7 @@ def configure_logging(settings):
     return logger
 
 # Initialize logger AFTER declaring settings
-logger = configure_logging(settings)
+logger_api = configure_logging(settings)
 
 
 

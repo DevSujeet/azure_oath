@@ -2,7 +2,7 @@ import time
 
 from fastapi.responses import StreamingResponse
 from src.auth.token_validator import getUserInfo_from_request
-from src.config.log_config import logger
+from src.config.log_config import logger_api
 from fastapi import HTTPException, Request, Response, Depends
 from functools import wraps
 import json
@@ -41,7 +41,7 @@ def log_request_response(log_route=True,log_response=True):
                 request_body = await request.body()
                 request_body = request_body.decode("utf-8") if request_body else None
             except Exception as e:
-                logger.warning(f"Failed to read request body: {str(e)}")
+                logger_api.warning(f"Failed to read request body: {str(e)}")
                 request_body = None  # Ensure no crash on read failure
 
             # ✅ Capture request details
@@ -49,6 +49,7 @@ def log_request_response(log_route=True,log_response=True):
                 "user": user_info.get("email", "Unknown"),
                 "user_name": user_info.get("name", "Unknown"),
                 "roles": user_info.get("roles", "Unknown"),
+                "ip_address": request.client.host,
                 "method": request.method,
                 "path": request.url.path,
                 "query_params": dict(request.query_params),  # Capture query params separately
@@ -91,7 +92,7 @@ def log_request_response(log_route=True,log_response=True):
 
             # ✅ Log request and response
             log_data = {**request_log, **response_log}
-            logger.info(f"Request Log: {json.dumps(log_data)}")
+            logger_api.info(f"Request Log: {json.dumps(log_data)}")
 
             return response  # Return the original response
         return wrapper
