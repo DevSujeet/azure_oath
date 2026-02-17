@@ -17,6 +17,7 @@ def get_msal_client():
         client_credential=CLIENT_SECRET,
         authority=AUTHORITY
     )
+
 msal_client = get_msal_client()
 
 def exchange_code_for_token(auth_code: str) -> dict:

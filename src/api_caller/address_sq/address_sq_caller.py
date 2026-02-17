@@ -64,16 +64,16 @@ class response_provider_factory(response_provider):
 
 
 # # Example API endpoint using the token
-# @retry_on_token_expiry(max_retries=addresSQ_api_token_max_retries)
-# async def call_secured_api():
-#     token = token_manager.get_token()
-#     try:
-#         # create proper request as required
-#         response = requests.get(
-#             "some url for address sq",
-#             headers={"Authorization": f"Bearer {token}"},
-#         )
-#         response.raise_for_status()
-#         return response.json()
-#     except requests.exceptions.RequestException as e:
-#         raise HTTPException(status_code=500, detail=f"API call failed: {e}")
+@retry_on_token_expiry(max_retries=addresSQ_api_token_max_retries)
+async def call_secured_api():
+    token = token_manager.get_token()
+    try:
+        # create proper request as required
+        response = requests.get(
+            "some url for address sq",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"API call failed: {e}")

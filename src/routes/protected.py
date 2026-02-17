@@ -42,7 +42,7 @@ async def admin_resource(decoded_token: dict = Depends(validate_token)):
     dependencies=[Depends(validate_token)]: This ensures validate_token is executed before the route handler (admin_resource) is called.
     decoded_token: dict = Depends(validate_token): This also executes validate_token, but it injects the returned value (decoded_token) into the route handler as a parameter.
 
-This leads to duplicate execution of validate_token. While it won't cause errors, it is unnecessary.
+    This leads to duplicate execution of validate_token. While it won't cause errors, it is unnecessary.
     you do not need to specify dependencies=[Depends(validate_token)] in this case
     because decoded_token: dict = Depends(validate_token) already ensures:
     - validate_token is called as a dependency

@@ -6,6 +6,7 @@ from src.config.log_config import logger_api
 from fastapi import HTTPException, Request, Response, Depends
 from functools import wraps
 import json
+from src.config.logger_setup import logger
 
 
 # ✅ Fully Generic Logging Decorator (Independent of Schema & Dependencies)
@@ -189,7 +190,7 @@ This will help us to avoid the duplicate execution of the token validation funct
 
             # ✅ Log request and response
             log_data = {**request_log, **response_log}
-            logger_api.info(f"Request Log: {json.dumps(log_data)}")
+            logger.info(f"Request Log: {json.dumps(log_data)}")
 
             return response  # Return the original response
         return wrapper
